@@ -19,12 +19,12 @@ public class SecurityConfig extends WebSecurityConfig {
 
 	@Override
 	protected String usersByUsernameQuery() {
-		return "select username, password, enable from public.login where username=?";
+		return "select username, password, enable from login where username=?";
 	}
 
 	@Override
 	protected String authoritiesByUsernameQuery() {
-		return "select username, null as authority from public.login where username=?";
+		return "select username, null as authority from login where username=?";
 	}
 
 	@Override
@@ -34,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfig {
 		http.cors().and().authorizeRequests()
 				// Authentication
 				.antMatchers(HttpMethod.POST, "/login").permitAll()
+				.antMatchers(HttpMethod.POST, "/user").permitAll()
 				
 				.anyRequest().authenticated().and().httpBasic().disable()
 
