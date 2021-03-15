@@ -131,6 +131,7 @@ public class TokenAuthenticationService {
 			try {
 				JWTVerifier verifier = JWT.require(TOKEN_SIGN_ALGORITHM).withIssuer(ISSUER).build();
 
+				token = token.replace("Bearer ", "");
 				DecodedJWT jwt = verifier.verify(token);
 
 				String user = jwt.getSubject();
