@@ -45,7 +45,7 @@ public class User {
 	}
 	
 	public UserResponse generateResponse() {
-		return new UserResponse(cpf);
+		return new UserResponse(this.cpf);
 	}
 
 }

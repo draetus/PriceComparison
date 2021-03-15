@@ -13,6 +13,7 @@ import br.com.univali.pricecomparison.api.user.model.User;
 import br.com.univali.pricecomparison.api.user.model.DTO.UserRequest;
 import br.com.univali.pricecomparison.api.user.model.DTO.UserResponse;
 import br.com.univali.pricecomparison.api.user.service.UserService;
+import br.com.univali.pricecomparison.api.user.service.UserValidationService;
 
 @RestController
 @RequestMapping("/user")
@@ -21,9 +22,13 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private UserValidationService userValidationService;
+	
 	@Transactional
 	@PostMapping
 	public ResponseEntity<UserResponse> save(@RequestBody UserRequest userRequest){
+		userValidationService.validateRegisterRequest(userRequest);
 		User user = userRequest.generateModel();
 		user = userService.save(user);
 		UserResponse userResponse = user.generateResponse();

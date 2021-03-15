@@ -35,6 +35,8 @@ public class SecurityConfig extends WebSecurityConfig {
 				// Authentication
 				.antMatchers(HttpMethod.POST, "/login").permitAll()
 				.antMatchers(HttpMethod.POST, "/user").permitAll()
+//				.antMatchers(HttpMethod.POST, "/test").permitAll()
+				.antMatchers(HttpMethod.POST, "/price").permitAll()
 				
 				.anyRequest().authenticated().and().httpBasic().disable()
 
