@@ -1,5 +1,7 @@
 package br.com.univali.pricecomparison.api.user.model;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,8 +10,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.sun.istack.NotNull;
 
@@ -37,6 +42,15 @@ public class User {
 	@JoinColumn(name="id_login")	
 	@NotNull
 	private Login login;
+	
+	@NotNull
+	@CreationTimestamp
+	private Date createdDate;
+	
+	@PrePersist
+	protected void onCreate() {
+		this.createdDate = new Date();
+	}
 	
 	public User(String cpf, Login login) {
 		super();

@@ -11,4 +11,6 @@ import br.com.univali.pricecomparison.api.product.model.Product;
 public interface ProductRepository extends JpaRepository<Product, Long>{
 	
 	public Optional<Product> findByBarCode(String barCode);
+	
+	public Boolean existsByBarCode(String barCode);
 }

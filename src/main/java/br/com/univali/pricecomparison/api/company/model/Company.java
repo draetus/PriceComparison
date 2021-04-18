@@ -1,5 +1,7 @@
 package br.com.univali.pricecomparison.api.company.model;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,8 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.sun.istack.NotNull;
 
@@ -36,6 +41,15 @@ public class Company {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="address_id", nullable=false)
 	private Address address;
+	
+	@NotNull
+	@CreationTimestamp
+	private Date createdDate;
+	
+	@PrePersist
+	protected void onCreate() {
+		this.createdDate = new Date();
+	}
 	
 	public Company(String name, Double lat, Double lon) {
 		super();

@@ -5,10 +5,12 @@ import lombok.Data;
 @Data
 public class ProductPriceRequest {
 	
-	private String barCode;
+	private String barcode;
 	
 	private Double price; 
 	
-	private String address;
+	private Double latitude;
+	
+	private Double longitude;
 
 }

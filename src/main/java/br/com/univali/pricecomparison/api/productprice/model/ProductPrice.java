@@ -1,5 +1,7 @@
 package br.com.univali.pricecomparison.api.productprice.model;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,11 +12,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.sun.istack.NotNull;
+
 import br.com.univali.pricecomparison.api.address.model.Address;
-import br.com.univali.pricecomparison.api.company.model.Company;
 import br.com.univali.pricecomparison.api.product.model.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,14 +43,23 @@ public class ProductPrice {
 	
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name="address_id", nullable=false)
-	private Address company;
+	private Address address;
 	
 	private Double price;
+	
+	@NotNull
+	@CreationTimestamp
+	private Date createdDate;
+	
+	@PrePersist
+	protected void onCreate() {
+		this.createdDate = new Date();
+	}
 
-	public ProductPrice(Product product, Address company, Double price) {
+	public ProductPrice(Product product, Address address, Double price) {
 		super();
 		this.product = product;
-		this.company = company;
+		this.address = address;
 		this.price = price;
 	}
 

@@ -23,7 +23,7 @@ public class ProductPriceController {
 	@Transactional
 	@PostMapping
 	public ResponseEntity<ProductPrice> save(@RequestBody ProductPriceRequest productPriceRequest){
-		ProductPrice productPrice = productPriceService.save(productPriceRequest.getBarCode(), productPriceRequest.getPrice(), productPriceRequest.getAddress());
+		ProductPrice productPrice = productPriceService.save(productPriceRequest.getBarcode(), productPriceRequest.getPrice(), productPriceRequest.getLatitude(), productPriceRequest.getLongitude());
 		return new ResponseEntity<ProductPrice>(productPrice, HttpStatus.OK);
 	}
 

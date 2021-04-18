@@ -18,6 +18,10 @@ public class ProductService {
 		return productRepository.save(product);
 	}
 	
+	public Boolean existsByBarCode(String barCode) {
+		return productRepository.existsByBarCode(barCode);
+	}
+	
 	public Optional<Product> findByBarCode(String barCode) {
 		return productRepository.findByBarCode(barCode);
 	}

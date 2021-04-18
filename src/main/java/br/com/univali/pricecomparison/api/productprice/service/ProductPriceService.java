@@ -10,8 +10,6 @@ import br.com.univali.pricecomparison.api.product.model.Product;
 import br.com.univali.pricecomparison.api.product.service.ProductService;
 import br.com.univali.pricecomparison.api.productprice.model.ProductPrice;
 import br.com.univali.pricecomparison.api.productprice.repository.ProductPriceRepository;
-import br.com.univali.pricecomparison.external.geocode.model.dto.GeoCodeResponse;
-import br.com.univali.pricecomparison.external.geocode.service.GeoCodeService;
 
 @Service
 public class ProductPriceService {
@@ -22,26 +20,17 @@ public class ProductPriceService {
 	@Autowired
 	private ProductService productService;
 	
-	@Autowired
-	private GeoCodeService geoCodeService;
-	
-	public ProductPrice save(String barCode, Double price, String address) {
+	public ProductPrice save(String barCode, Double price, Double latitude, Double longitude) {
 		Optional<Product> product = productService.findByBarCode(barCode);
 		if (!product.isPresent()) {
 			throw new RuntimeException("Produto ainda não registrado");
 		}
 		
-		GeoCodeResponse geoCodeResponse = geoCodeService.geoCode(address);
+		Address address = new Address(
+				latitude,
+				longitude);
 		
-		if (geoCodeResponse.getItems().size() < 1) {
-			throw new RuntimeException("Não foi possível geolocalizar o endereço");
-		}
-		
-		Address a = new Address(
-				geoCodeResponse.getItems().get(0).getPosition().getLat(),
-				geoCodeResponse.getItems().get(0).getPosition().getLng());
-		
-		ProductPrice productPrice = new ProductPrice(product.get(), a, price);
+		ProductPrice productPrice = new ProductPrice(product.get(), address, price);
 		
 		return productPriceRepository.save(productPrice);
 	}

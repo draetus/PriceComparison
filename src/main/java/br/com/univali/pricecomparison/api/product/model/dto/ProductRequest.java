@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ProductRequest {
 	
-	private String barCode;
+	private String barcode;
 	
 	private String name;
 
