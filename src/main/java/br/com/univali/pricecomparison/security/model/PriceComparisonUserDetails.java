@@ -53,6 +53,23 @@ public class PriceComparisonUserDetails extends UsernamePasswordAuthenticationTo
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	public Long getExtraDataValueAsLong(String key){
+		Object obj = getExtraDataObjectValue(key);
+		Long value = null;
+		if (obj instanceof Number){
+			value = ((Number) obj).longValue(); 
+		}else if (obj instanceof String) {
+			value = Long.valueOf((String)obj);
+		}else {
+			throw new RuntimeException("Falha ao converter valor no contexto de segurança "+key);
+		}
+		return value;
+	}
+	
+	private Object getExtraDataObjectValue(String key){
+		return this.extraData.get(key);
+	}
 
 }
 

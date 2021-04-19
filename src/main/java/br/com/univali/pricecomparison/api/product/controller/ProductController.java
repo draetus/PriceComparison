@@ -45,7 +45,7 @@ public class ProductController {
 		if (!product.isPresent()) {
 			throw new RuntimeException("Produto não encontrado");
 		}
-		ProductResponse productResponse = product.get().generateResponse();
+		ProductResponse productResponse = new ProductResponse(product.get().getBarCode(), product.get().getName());
 		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.OK);
 	}
 
