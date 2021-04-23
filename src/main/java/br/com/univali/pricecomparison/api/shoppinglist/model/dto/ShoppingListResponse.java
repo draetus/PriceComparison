@@ -13,6 +13,8 @@ public class ShoppingListResponse {
 	
 	private Long id;
 	
+	private String name;
+	
 	private List<ProductResponse> products;
 	
 	public ShoppingListResponse(ShoppingList shoppingList) {
@@ -20,6 +22,7 @@ public class ShoppingListResponse {
 		List<ProductResponse> productResponses = ProductResponse.generateList(products);
 		this.products = productResponses;
 		this.id = shoppingList.getId();
+		this.name = shoppingList.getName();
 	}
 	
 	public static List<ShoppingListResponse> generateList(List<ShoppingList> shoppingLists) {

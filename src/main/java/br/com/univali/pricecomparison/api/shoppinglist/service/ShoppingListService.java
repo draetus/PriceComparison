@@ -33,5 +33,9 @@ public class ShoppingListService {
 		Long userId = PriceComparisonSecurityContext.getUserId();
 		return shoppingListRepository.findAllByUserId(userId);
 	}
+	
+	public void deleteById(Long id) {
+		shoppingListRepository.deleteById(id);
+	}
 
 }
