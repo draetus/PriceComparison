@@ -13,5 +13,8 @@ public interface ShoppingListRepository extends JpaRepository<ShoppingList, Long
 	
 	@Query(value = "SELECT sl FROM ShoppingList sl WHERE sl.user.id = :userId")
 	public List<ShoppingList> findAllByUserId(Long userId);
+	
+	@Query(value = "SELECT sl FROM ShoppingList sl WHERE sl.user.id = :userId AND sl.id = :id")
+	public ShoppingList findByUserIdAndId(Long userId, Long id);
 
 }
