@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import br.com.univali.pricecomparison.api.product.model.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long>{
+public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom{
 	
 	public Optional<Product> findByBarCode(String barCode);
 	

@@ -1,7 +1,9 @@
 package br.com.univali.pricecomparison.api.product.controller;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.univali.pricecomparison.api.product.model.Product;
 import br.com.univali.pricecomparison.api.product.model.dto.ProductExistsResponse;
+import br.com.univali.pricecomparison.api.product.model.dto.ProductFilter;
 import br.com.univali.pricecomparison.api.product.model.dto.ProductRequest;
 import br.com.univali.pricecomparison.api.product.model.dto.ProductResponse;
 import br.com.univali.pricecomparison.api.product.service.ProductService;
@@ -47,6 +50,13 @@ public class ProductController {
 		}
 		ProductResponse productResponse = new ProductResponse(product.get().getBarCode(), product.get().getName());
 		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "")
+	public ResponseEntity<List<ProductResponse>> findAll(@ParameterObject ProductFilter productFilter){
+		List<Product> products = productService.findAll(productFilter);
+		List<ProductResponse> productResponses = ProductResponse.generateList(products);
+		return new ResponseEntity<List<ProductResponse>>(productResponses, HttpStatus.OK);
 	}
 
 }
