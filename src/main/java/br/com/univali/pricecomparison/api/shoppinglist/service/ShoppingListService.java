@@ -6,10 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.univali.pricecomparison.api.product.model.Product;
-import br.com.univali.pricecomparison.api.product.service.ProductService;
 import br.com.univali.pricecomparison.api.shoppinglist.model.ShoppingList;
-import br.com.univali.pricecomparison.api.shoppinglist.model.dto.AddProductToShoppingListRequest;
 import br.com.univali.pricecomparison.api.shoppinglist.model.dto.CreateShoppingListRequest;
 import br.com.univali.pricecomparison.api.shoppinglist.repository.ShoppingListRepository;
 import br.com.univali.pricecomparison.api.user.model.User;
@@ -23,9 +20,6 @@ public class ShoppingListService {
 	private ShoppingListRepository shoppingListRepository;
 	
 	@Autowired
-	private ProductService productService;
-	
-	@Autowired
 	private UserService userService;
 	
 	public ShoppingList createNew(CreateShoppingListRequest createShoppingListRequest) {
@@ -35,14 +29,8 @@ public class ShoppingListService {
 		return shoppingListRepository.save(shoppingList);
 	}
 	
-	public ShoppingList addProduct(AddProductToShoppingListRequest addProductToShoppingListRequest, Long id) {
-		Long userId = PriceComparisonSecurityContext.getUserId();
-		ShoppingList shoppingList = shoppingListRepository.findByUserIdAndId(userId, id);
-		Optional<Product> product = productService.findByBarCode(addProductToShoppingListRequest.getBarcode());
-		if (product.isPresent()) {
-			shoppingList.getProducts().add(product.get());
-		}
-		return shoppingListRepository.save(shoppingList);
+	public ShoppingList findByUserIdAndId(Long userId, Long id) {
+		return shoppingListRepository.findByUserIdAndId(userId, id);
 	}
 	
 	public List<ShoppingList> findAllMy() {
@@ -52,25 +40,6 @@ public class ShoppingListService {
 	
 	public void deleteById(Long id) {
 		shoppingListRepository.deleteById(id);
-	}
-	
-	public ShoppingList deleteProductById(Long id, String productBarcode) {
-		Long userId = PriceComparisonSecurityContext.getUserId();
-		ShoppingList shoppingList = shoppingListRepository.findByUserIdAndId(userId, id);
-		List<Product> products = shoppingList.getProducts();
-		
-		Integer indexToDelete = null;
-		for (int i=0; i<products.size(); i++) {
-			if (products.get(i).getBarCode().equals(productBarcode)) {
-				indexToDelete = i;
-				break;
-			}
-		}
-		if (indexToDelete != null) {
-			products.remove(indexToDelete.intValue());
-		}
-		shoppingList.setProducts(products);
-		return shoppingListRepository.save(shoppingList);
 	}
 	
 	public Optional<ShoppingList> findById(Long id) {

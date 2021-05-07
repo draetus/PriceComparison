@@ -9,15 +9,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.sun.istack.NotNull;
 
-import br.com.univali.pricecomparison.api.product.model.Product;
+import br.com.univali.pricecomparison.api.shoppinglistproduct.model.ShoppingListProduct;
 import br.com.univali.pricecomparison.api.user.model.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,12 +40,10 @@ public class ShoppingList {
 	@JoinColumn(name="user_id", nullable=false)
 	private User user;
 	
-	@ManyToMany
-	@JoinTable(
-	  name = "shoppinglist_product", 
-	  joinColumns = @JoinColumn(name = "product_id"), 
-	  inverseJoinColumns = @JoinColumn(name = "shoppinglist_id"))
-	private List<Product> products;
+	@NotNull
+	@OneToMany
+	@JoinColumn(name="shoppinglist_id")
+	private List<ShoppingListProduct> shoppingListProducts;
 	
 	public ShoppingList(User user, String name) {
 		super();

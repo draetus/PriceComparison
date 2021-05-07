@@ -1,7 +1,6 @@
 package br.com.univali.pricecomparison.api.product.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class ProductService {
 		return productRepository.existsByBarCode(barCode);
 	}
 	
-	public Optional<Product> findByBarCode(String barCode) {
+	public Product findByBarCode(String barCode) {
 		return productRepository.findByBarCode(barCode);
 	}
 	

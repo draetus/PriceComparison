@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.univali.pricecomparison.api.product.model.dto.ProductResponse;
 import br.com.univali.pricecomparison.api.shoppinglist.model.ShoppingList;
 import br.com.univali.pricecomparison.api.shoppinglist.model.dto.AddProductToShoppingListRequest;
 import br.com.univali.pricecomparison.api.shoppinglist.model.dto.CreateShoppingListRequest;
 import br.com.univali.pricecomparison.api.shoppinglist.model.dto.ShoppingListResponse;
 import br.com.univali.pricecomparison.api.shoppinglist.service.ShoppingListService;
+import br.com.univali.pricecomparison.api.shoppinglistproduct.model.dto.ShoppingListProductResponse;
+import br.com.univali.pricecomparison.api.shoppinglistproduct.service.ShoppingListProductService;
 
 @RestController
 @RequestMapping("/shoppinglist")
@@ -29,6 +30,9 @@ public class ShoppingListController {
 	
 	@Autowired
 	private ShoppingListService shoppingListService;
+	
+	@Autowired
+	private ShoppingListProductService shoppingListProductService;
 	
 	@Transactional
 	@PostMapping
@@ -42,7 +46,7 @@ public class ShoppingListController {
 	public ResponseEntity<?> addProduct(
 			@RequestBody AddProductToShoppingListRequest createShoppingListRequest,
 			@PathVariable Long id){
-		shoppingListService.addProduct(createShoppingListRequest, id);
+		shoppingListProductService.addProduct(createShoppingListRequest, id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -54,12 +58,12 @@ public class ShoppingListController {
 	}
 	
 	@GetMapping(value = "/{id}/products")
-	public ResponseEntity<List<ProductResponse>> findProductsId(@PathVariable Long id){
+	public ResponseEntity<List<ShoppingListProductResponse>> findProductsId(@PathVariable Long id){
 		Optional<ShoppingList> shoppingList = shoppingListService.findById(id);
 		if (shoppingList.isPresent()) {
-			return new ResponseEntity<>(ProductResponse.generateList(shoppingList.get().getProducts()), HttpStatus.OK);
+			return new ResponseEntity<>(ShoppingListProductResponse.generateList(shoppingList.get().getShoppingListProducts()), HttpStatus.OK);
 		}
-		return new ResponseEntity<>(new ArrayList<ProductResponse>(), HttpStatus.OK);
+		return new ResponseEntity<>(new ArrayList<ShoppingListProductResponse>(), HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/{id}")
@@ -72,7 +76,7 @@ public class ShoppingListController {
 	public ResponseEntity<?> deleteProductFromList(
 			@PathVariable Long id,
 			@PathVariable String productBarcode){
-		shoppingListService.deleteProductById(id, productBarcode);
+		shoppingListProductService.deleteProductById(id, productBarcode);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

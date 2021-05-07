@@ -6,5 +6,7 @@ import lombok.Data;
 public class AddProductToShoppingListRequest {
 	
 	private String barcode;
+	
+	private Long quantity;
 
 }

@@ -1,7 +1,6 @@
 package br.com.univali.pricecomparison.api.product.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +43,11 @@ public class ProductController {
 	
 	@GetMapping(value = "/{barcode}")
 	public ResponseEntity<ProductResponse> searchByBarCode(@PathVariable String barcode){
-		Optional<Product> product = productService.findByBarCode(barcode);
-		if (!product.isPresent()) {
+		Product product = productService.findByBarCode(barcode);
+		if (product == null) {
 			throw new RuntimeException("Produto não encontrado");
 		}
-		ProductResponse productResponse = new ProductResponse(product.get().getBarCode(), product.get().getName());
+		ProductResponse productResponse = new ProductResponse(product.getBarCode(), product.getName());
 		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.OK);
 	}
 	

@@ -1,7 +1,5 @@
 package br.com.univali.pricecomparison.api.productprice.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +19,8 @@ public class ProductPriceService {
 	private ProductService productService;
 	
 	public ProductPrice save(String barCode, Double price, Double latitude, Double longitude) {
-		Optional<Product> product = productService.findByBarCode(barCode);
-		if (!product.isPresent()) {
+		Product product = productService.findByBarCode(barCode);
+		if (product == null) {
 			throw new RuntimeException("Produto ainda não registrado");
 		}
 		
@@ -30,7 +28,7 @@ public class ProductPriceService {
 				latitude,
 				longitude);
 		
-		ProductPrice productPrice = new ProductPrice(product.get(), address, price);
+		ProductPrice productPrice = new ProductPrice(product, address, price);
 		
 		return productPriceRepository.save(productPrice);
 	}
