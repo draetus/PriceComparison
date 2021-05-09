@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.univali.pricecomparison.api.productprice.model.ProductPrice;
 import br.com.univali.pricecomparison.api.productprice.model.dto.ProductPriceRequest;
 import br.com.univali.pricecomparison.api.productprice.service.ProductPriceService;
 
@@ -22,9 +21,9 @@ public class ProductPriceController {
 	
 	@Transactional
 	@PostMapping
-	public ResponseEntity<ProductPrice> save(@RequestBody ProductPriceRequest productPriceRequest){
-		ProductPrice productPrice = productPriceService.save(productPriceRequest.getBarcode(), productPriceRequest.getPrice(), productPriceRequest.getLatitude(), productPriceRequest.getLongitude());
-		return new ResponseEntity<ProductPrice>(productPrice, HttpStatus.OK);
+	public ResponseEntity<?> save(@RequestBody ProductPriceRequest productPriceRequest){
+		productPriceService.save(productPriceRequest.getBarcode(), productPriceRequest.getPrice(), productPriceRequest.getLatitude(), productPriceRequest.getLongitude());
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 }

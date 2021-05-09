@@ -8,7 +8,5 @@ import br.com.univali.pricecomparison.api.product.model.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductRepositoryCustom{
 	
-	public Product findByBarCode(String barCode);
-	
 	public Boolean existsByBarCode(String barCode);
 }

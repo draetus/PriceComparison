@@ -24,7 +24,7 @@ public class ProductService {
 	}
 	
 	public Product findByBarCode(String barCode) {
-		return productRepository.findByBarCode(barCode);
+		return productRepository.findByBarCode(new ProductFilter(null, barCode)); 
 	}
 	
 	public List<Product> findAll(ProductFilter filters) {

@@ -7,6 +7,7 @@ import br.com.univali.pricecomparison.api.address.model.Address;
 import br.com.univali.pricecomparison.api.product.model.Product;
 import br.com.univali.pricecomparison.api.product.service.ProductService;
 import br.com.univali.pricecomparison.api.productprice.model.ProductPrice;
+import br.com.univali.pricecomparison.api.productprice.model.dto.ProductPriceResponse;
 import br.com.univali.pricecomparison.api.productprice.repository.ProductPriceRepository;
 
 @Service
@@ -31,6 +32,18 @@ public class ProductPriceService {
 		ProductPrice productPrice = new ProductPrice(product, address, price);
 		
 		return productPriceRepository.save(productPrice);
+	}
+	
+	public ProductPriceResponse findBestPrice(String barcode, Double latUser, Double lonUser) {
+		return productPriceRepository.findBestPrice(barcode, latUser, lonUser);
+	}
+	
+	public ProductPriceResponse findBestPriceNear(String barcode, Double latUser, Double lonUser) {
+		return productPriceRepository.findBestPriceNear(barcode, latUser, lonUser);
+	}
+	
+	public Double findAveragePrice(String barcode) {
+		return productPriceRepository.findAveragePrice(barcode);
 	}
 
 }

@@ -23,11 +23,16 @@ public class ProductRepositoryCustomImpl extends RepositoryCustomImpl implements
 	private static final String NAME_FILTER = 
 			" ( LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%')) ) ";
 	
+	private static final String BARCODE_FILTER = 
+			" ( p.barCode = :barcode ) ";
+	
 	private void filters(ProductFilter filter, StringBuilder sqlBuilder) {
 		List<String> filters = new ArrayList<String>();
 		
 		if (filter.getName() != null)
 			filters.add(NAME_FILTER);
+		if (filter.getBarcode() != null)
+			filters.add(BARCODE_FILTER);
 		
 		parseFilters(filters, sqlBuilder);
 	}
@@ -36,6 +41,8 @@ public class ProductRepositoryCustomImpl extends RepositoryCustomImpl implements
 		
 		if (filter.getName() != null)
 			query.setParameter("name", filter.getName());
+		if (filter.getBarcode() != null)
+			query.setParameter("barcode", filter.getBarcode());
 	}
 
 	@Override
@@ -51,6 +58,22 @@ public class ProductRepositoryCustomImpl extends RepositoryCustomImpl implements
 		
 		List<Product> lista = query.getResultList();
 		return lista;
+	}
+
+	@Override
+	public Product findByBarCode(ProductFilter filters) {
+		StringBuilder sqlBuilder = new StringBuilder();
+		
+		sqlBuilder.append(" SELECT p ");
+		sqlBuilder.append(" FROM Product p ");
+		filters(filters, sqlBuilder);
+		
+		Query query = entityManager.createQuery(sqlBuilder.toString());
+		filterParameters(query, filters);
+		query.setMaxResults(1);
+		
+		List<Product> lista = query.getResultList();
+		return lista.size() == 0 ? null : lista.get(0);
 	}
 
 }

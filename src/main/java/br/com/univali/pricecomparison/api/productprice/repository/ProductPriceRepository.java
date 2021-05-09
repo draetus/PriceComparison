@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.univali.pricecomparison.api.productprice.model.ProductPrice;
 
 @Repository
-public interface ProductPriceRepository extends JpaRepository<ProductPrice, Long>{
+public interface ProductPriceRepository extends JpaRepository<ProductPrice, Long>, ProductPriceRepositoryCustom {
 
 }

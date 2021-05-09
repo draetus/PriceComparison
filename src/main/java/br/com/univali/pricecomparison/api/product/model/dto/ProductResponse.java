@@ -1,9 +1,6 @@
 package br.com.univali.pricecomparison.api.product.model.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import br.com.univali.pricecomparison.api.product.model.Product;
+import br.com.univali.pricecomparison.api.productprice.model.dto.ProductPriceResponse;
 import lombok.Data;
 
 @Data
@@ -12,18 +9,21 @@ public class ProductResponse {
 	private String barcode;
 	
 	private String name;
-
-	public ProductResponse(String barCode, String name) {
-		super();
-		this.barcode = barCode;
-		this.name = name;
-	}
 	
-	public static List<ProductResponse> generateList(List<Product> products) {
-		List<ProductResponse> productResponses = products.stream()
-				.map((Product product) -> new ProductResponse(product.getBarCode(), product.getName()))
-				.collect(Collectors.toList());
-		return productResponses;
+	private ProductPriceResponse bestPrice;
+	
+	private ProductPriceResponse bestPriceNear;
+	
+	private Double averagePrice;
+	
+	public ProductResponse(String barcode, String name, ProductPriceResponse bestPrice,
+			ProductPriceResponse bestPriceNear, Double averagePrice) {
+		super();
+		this.barcode = barcode;
+		this.name = name;
+		this.bestPrice = bestPrice;
+		this.bestPriceNear = bestPriceNear;
+		this.averagePrice = averagePrice;
 	}
 
 }

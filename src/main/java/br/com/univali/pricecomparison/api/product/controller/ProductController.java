@@ -19,7 +19,10 @@ import br.com.univali.pricecomparison.api.product.model.dto.ProductExistsRespons
 import br.com.univali.pricecomparison.api.product.model.dto.ProductFilter;
 import br.com.univali.pricecomparison.api.product.model.dto.ProductRequest;
 import br.com.univali.pricecomparison.api.product.model.dto.ProductResponse;
+import br.com.univali.pricecomparison.api.product.model.dto.ProductResumedResponse;
 import br.com.univali.pricecomparison.api.product.service.ProductService;
+import br.com.univali.pricecomparison.api.productprice.model.dto.ProductPriceResponse;
+import br.com.univali.pricecomparison.api.productprice.service.ProductPriceService;
 
 @RestController
 @RequestMapping("/product")
@@ -27,6 +30,9 @@ public class ProductController {
 	
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private ProductPriceService productPriceService;
 	
 	@Transactional
 	@PostMapping
@@ -41,21 +47,27 @@ public class ProductController {
 		return new ResponseEntity<ProductExistsResponse>(new ProductExistsResponse(exists), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/{barcode}")
-	public ResponseEntity<ProductResponse> searchByBarCode(@PathVariable String barcode){
+	@GetMapping(value = "/{barcode}/{lat}/{lon}")
+	public ResponseEntity<ProductResponse> searchByBarCode(
+			@PathVariable String barcode,
+			@PathVariable Double lat,
+			@PathVariable Double lon){
 		Product product = productService.findByBarCode(barcode);
 		if (product == null) {
 			throw new RuntimeException("Produto não encontrado");
 		}
-		ProductResponse productResponse = new ProductResponse(product.getBarCode(), product.getName());
+		ProductPriceResponse bestPrice = productPriceService.findBestPrice(barcode, lat, lon);
+		ProductPriceResponse bestPriceNear = productPriceService.findBestPriceNear(barcode, lat, lon);
+		Double averagePrice = productPriceService.findAveragePrice(barcode);
+		ProductResponse productResponse = new ProductResponse(product.getBarCode(), product.getName(), bestPrice, bestPriceNear, averagePrice);
 		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "")
-	public ResponseEntity<List<ProductResponse>> findAll(@ParameterObject ProductFilter productFilter){
+	public ResponseEntity<List<ProductResumedResponse>> findAll(@ParameterObject ProductFilter productFilter){
 		List<Product> products = productService.findAll(productFilter);
-		List<ProductResponse> productResponses = ProductResponse.generateList(products);
-		return new ResponseEntity<List<ProductResponse>>(productResponses, HttpStatus.OK);
+		List<ProductResumedResponse> productResponses = ProductResumedResponse.generateList(products);
+		return new ResponseEntity<List<ProductResumedResponse>>(productResponses, HttpStatus.OK);
 	}
 
 }
