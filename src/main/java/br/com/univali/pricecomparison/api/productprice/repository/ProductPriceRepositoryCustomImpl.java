@@ -41,12 +41,16 @@ public class ProductPriceRepositoryCustomImpl extends RepositoryCustomImpl imple
 		
 		List<ProductPrice> lista = query.getResultList();
 		
+		if (lista.size() == 0) {
+			return new ProductPriceResponse(null, null);
+		}
+		
 		Double distanceAux;
 		List<Double> distances = new ArrayList<Double>();
 		List<Double> priceWeights = new ArrayList<Double>();
 		
 		for (ProductPrice productPrice : lista) {
-			distanceAux = geoDistanceService.distance(latUser, lonUser, productPrice.getAddress().getLat(), productPrice.getAddress().getLon());
+			distanceAux = geoDistanceService.distance(latUser, lonUser, productPrice.getAddress().getLat(), productPrice.getAddress().getLon())/1000;
 			priceWeights.add(distanceAux * 0.3d + productPrice.getPrice() * 0.7);
 			distances.add(distanceAux);
 		}
@@ -77,11 +81,15 @@ public class ProductPriceRepositoryCustomImpl extends RepositoryCustomImpl imple
 		
 		List<ProductPrice> lista = query.getResultList();
 		
+		if (lista.size() == 0) {
+			return new ProductPriceResponse(null, null);
+		}
+		
 		Double price = null;
 		Double distanceFinal = null;
 		Double distanceAux;
 		for (ProductPrice productPrice : lista) {
-			distanceAux = geoDistanceService.distance(latUser, lonUser, productPrice.getAddress().getLat(), productPrice.getAddress().getLon());
+			distanceAux = geoDistanceService.distance(latUser, lonUser, productPrice.getAddress().getLat(), productPrice.getAddress().getLon())/1000;
 			if (distanceAux < NEAR_PRICE_DISTANCE_METERS && (price == null || productPrice.getPrice() < price)) {
 				price = productPrice.getPrice();
 				distanceFinal = distanceAux;
