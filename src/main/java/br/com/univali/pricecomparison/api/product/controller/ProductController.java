@@ -54,7 +54,7 @@ public class ProductController {
 			@PathVariable Double lon){
 		Product product = productService.findByBarCode(barcode);
 		if (product == null) {
-			throw new RuntimeException("Produto não encontrado");
+			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
 		ProductPriceResponse bestPrice = productPriceService.findBestPrice(barcode, lat, lon);
 		ProductPriceResponse bestPriceNear = productPriceService.findBestPriceNear(barcode, lat, lon);
