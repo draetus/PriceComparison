@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import br.com.univali.pricecomparison.api.shoppinglist.model.ShoppingList;
 import br.com.univali.pricecomparison.api.shoppinglist.model.dto.CreateShoppingListRequest;
 import br.com.univali.pricecomparison.api.shoppinglist.repository.ShoppingListRepository;
+import br.com.univali.pricecomparison.api.shoppinglistproduct.model.ShoppingListProduct;
+import br.com.univali.pricecomparison.api.shoppinglistproduct.repository.ShoppingListProductRepository;
 import br.com.univali.pricecomparison.api.user.model.User;
 import br.com.univali.pricecomparison.api.user.service.UserService;
 import br.com.univali.pricecomparison.security.context.PriceComparisonSecurityContext;
@@ -18,6 +20,9 @@ public class ShoppingListService {
 	
 	@Autowired
 	private ShoppingListRepository shoppingListRepository;
+	
+	@Autowired
+	private ShoppingListProductRepository shoppingListProductRepository;
 	
 	@Autowired
 	private UserService userService;
@@ -39,7 +44,12 @@ public class ShoppingListService {
 	}
 	
 	public void deleteById(Long id) {
-		shoppingListRepository.deleteById(id);
+		Optional<ShoppingList> shoppingList = shoppingListRepository.findById(id);
+		if (shoppingList.isPresent()) {
+			List<ShoppingListProduct> shoppingListProducts = shoppingList.get().getShoppingListProducts();
+			shoppingListProductRepository.deleteAll(shoppingListProducts);
+			shoppingListRepository.deleteById(id);
+		}
 	}
 	
 	public Optional<ShoppingList> findById(Long id) {
